@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -108,4 +108,86 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+} */
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+a {
+  color: inherit;
+}
+
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #1f2937;
+  color: white;
+}
+
+nav div {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+main {
+  min-height: 80vh;
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  background-color: #1f2937;
+  color: white;
+}
+
+.application-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.application-card {
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+  max-width: 500px;
+}
+
+label {
+  display: grid;
+  gap: 0.25rem;
+}
+
+input {
+  padding: 0.75rem;
+}
+
+button {
+  padding: 0.75rem;
+  cursor: pointer;
 }
