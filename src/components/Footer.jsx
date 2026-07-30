@@ -1,12 +1,3 @@
-// function Footer() {
-//   return (
-//     <footer className="footer">
-//       <p>© 2026 Job Application Tracker</p>
-//     </footer>
-//   );
-// }
-
-// export default Footer;
 
 
 function Footer() {
