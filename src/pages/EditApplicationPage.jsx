@@ -9,7 +9,7 @@ function EditApplicationPage() {
 
   // Navigate after updating
   const navigate = useNavigate();
-  
+
   // Store the form values
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
@@ -30,11 +30,11 @@ function EditApplicationPage() {
     // Load the existing application
 
     async function getApplication() {
-      const response = await fetch(`${API_URL}/api/applications/${id}`);
-      const data = await response.json();
+      const res = await fetch(`${API_URL}/api/applications/${id}`);
+      const data = await res.json();
 
       // Stop here if the application does not exist
-      if (!response.ok) {
+      if (!res.ok) {
         setLoadError(data.error || "Could not load this application.");
         setLoading(false);
         return;
@@ -50,7 +50,6 @@ function EditApplicationPage() {
       setNotes(data.notes || "");
       setLoading(false);
     }
-
     getApplication();
   }, [id]);
 

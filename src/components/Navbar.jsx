@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function Navbar() {
   return (
     <nav>
-      <Link to="/">Job Tracker</Link>
+      <Link to="/">Job Application Tracker</Link>
 
       <div>
         <Link to="/">Home</Link>

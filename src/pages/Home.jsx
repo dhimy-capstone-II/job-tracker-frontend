@@ -107,7 +107,12 @@ return (
         }}
       />
 
+      <label htmlFor="status-filter">
+        Filter by status
+      </label>
+
       <select
+        id="status-filter"
         value={statusFilter}
         onChange={(event) => setStatusFilter(event.target.value)}
       >
@@ -120,10 +125,7 @@ return (
         <option value="Closed">Closed</option>
       </select>
 
-      {/* Show this button only when a search or filter is active. */}
-            {/* Is there text in the search box? or 
-            Is the selected status different from "All"? */}
-
+      {/* Show this button only when a filter is active. */}
       {(search || statusFilter !== "All") && (
         <button
           type="button"
@@ -142,7 +144,9 @@ return (
     {filteredApplications.length === 0 ? (
       <p className="state">
         No matching applications found.{" "}
-        <Link to="/applications/new">Add a new application</Link>
+        <Link to="/applications/new">
+          Add a new application
+        </Link>
       </p>
     ) : (
       <div className="application-grid">
@@ -154,8 +158,8 @@ return (
         ))}
       </div>
     )}
-    </section>
-  );
+  </section>
+);
 }
 
 export default Home;
