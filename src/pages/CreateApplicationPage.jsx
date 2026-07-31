@@ -1,130 +1,149 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function ApplicationPage() {
-  // Get the application ID from the URL
-  const { id } = useParams();
+function CreateApplicationPage() {
+  // Navigate to another page after creating the application
   const navigate = useNavigate();
 
-  // Store one application
-  const [application, setApplication] = useState(null);
+  // Store the value of each form input
+  const [company, setCompany] = useState("");
+  const [position, setPosition] = useState("");
+  const [status, setStatus] = useState("Saved");
+  const [location, setLocation] = useState("");
+  const [dateApplied, setDateApplied] = useState("");
+  const [jobLink, setJobLink] = useState("");
+  const [notes, setNotes] = useState("");
 
-  // Store an error from loading the application
-  const [loadError, setLoadError] = useState("");
-
-  // Store an error from deleting the application
+  // Store a validation message returned by the backend
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    // Fetch one application
-    async function getApplication() {
-      const response = await fetch(`${API_URL}/api/applications/${id}`);
-      const data = await response.json();
+  // Submit the form and create a new application
+  async function handleSubmit(event) {
+    // Prevent the page from refreshing
+    event.preventDefault();
 
-      // Stop here if the application does not exist
-      if (!response.ok) {
-        setLoadError(data.error || "Could not load this application.");
-        return;
-      }
-
-      setApplication(data);
-    }
-
-    getApplication();
-  }, [id]);
-
-  // Delete the application
-  async function handleDelete() {
-    if (!window.confirm("Delete this application?")) return;
-
+    // Clear the error from any previous attempt
     setError("");
 
-    const response = await fetch(`${API_URL}/api/applications/${id}`, {
-      method: "DELETE",
+    // Build the new application object
+    const application = {
+      company,
+      position,
+      status,
+      location,
+      dateApplied,
+      jobLink,
+      notes,
+    };
+
+    // Send the new application to the backend
+    const response = await fetch(`${API_URL}/api/applications`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(application),
     });
 
-    // Stay on the page and explain the problem instead of failing silently
+    // Read the application returned by the backend
+    const data = await response.json();
+
+    // Show the backend's message instead of navigating to a broken page
     if (!response.ok) {
-      setError("Could not delete this application. Please try again.");
+      setError(data.error || "Something went wrong. Please try again.");
       return;
     }
 
-    // Navigate home after deletion
-    navigate("/");
+    // Navigate to the new application's details page
+    navigate(`/applications/${data.id}`);
   }
 
-  if (loadError) {
-    return <p className="state error">{loadError}</p>;
-  }
 
-  if (!application) {
-    return <p className="state">Loading application...</p>;
-  }
+  // Display the create application page
+return (
+  <section className="form-page">
+    <div className="application-form-card">
+      <h1>New Application</h1>
 
-  // Display the application
-  return (
-    <section className="application-details">
-      <Link to="/" className="back-link">
-        ← All Applications
-      </Link>
-
-      <div className="details-card">
-        <h1>{application.company}</h1>
-        <p className="details-position">{application.position}</p>
-
-        <span className={`badge badge-${application.status.toLowerCase()}`}>
-          {application.status}
-        </span>
-
-        <p>
-          <strong>Location:</strong>{" "}
-          {application.location || "Not provided"}
-        </p>
-
-        <p>
-          <strong>Date applied:</strong>{" "}
-          {application.dateApplied || "Not applied yet"}
-        </p>
-
-        <p>
-          <strong>Notes:</strong> {application.notes || "No notes"}
-        </p>
-
-        {application.jobLink && (
-          <p>
-            <a
-              href={application.jobLink}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Job Posting
-            </a>
-          </p>
-        )}
-
+      {/* Submit the form to create an application */}
+      <form className="application-form" onSubmit={handleSubmit}>
         {error && <p className="state error">{error}</p>}
 
-        <div className="details-actions">
-          <Link
-            to={`/applications/${id}/edit`}
-            className="button-link"
-          >
-            Edit
-          </Link>
+        <label>
+          Company
+          <input
+            value={company}
+            onChange={(event) => setCompany(event.target.value)}
+          />
+        </label>
 
-          <button
-            type="button"
-            className="delete-button"
-            onClick={handleDelete}
+        <label>
+          Position
+          <input
+            value={position}
+            onChange={(event) => setPosition(event.target.value)}
+          />
+        </label>
+
+        <label>
+          Status
+          <select
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
           >
-            Delete
-          </button>
-        </div>
-      </div>
-    </section>
+            <option>Saved</option>
+            <option>Applied</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+            <option>Closed</option>
+          </select>
+        </label>
+
+        <label>
+          Location
+          <input
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+          />
+        </label>
+
+        <label>
+          Date applied
+          <input
+            type="date"
+            value={dateApplied}
+            onChange={(event) => setDateApplied(event.target.value)}
+          />
+
+          {error.toLowerCase().includes("date") && (
+            <span className="field-error">{error}</span>
+          )}
+        </label>
+
+        <label>
+          Job link
+          <input
+            type="url"
+            placeholder="https://company.com/jobs/123"
+            value={jobLink}
+            onChange={(event) => setJobLink(event.target.value)}
+          />
+        </label>
+
+        <label>
+          Notes
+          <textarea
+            value={notes}
+            onChange={(event) => setNotes(event.target.value)}
+          />
+        </label>
+
+        <button type="submit">Save Application</button>
+      </form>
+    </div>
+  </section>
   );
 }
 
-export default ApplicationPage;
+export default CreateApplicationPage;

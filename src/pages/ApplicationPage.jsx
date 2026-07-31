@@ -16,7 +16,7 @@ function ApplicationPage() {
 
   // Store an error from deleting the application
   const [error, setError] = useState("");
-
+  
   useEffect(() => {
     // Fetch one application
     async function getApplication() {
@@ -63,6 +63,17 @@ function ApplicationPage() {
     return <p className="state">Loading application...</p>;
   }
 
+  // Change YYYY-MM-DD into MM/DD/YYYY.
+  function formatDate(date) {
+    if (!date) {
+      return "Not provided";
+    }
+
+    const [year, month, day] = date.split("-");
+
+    return `${month}/${day}/${year}`;
+  }
+
   // Display the application
   return (
     <section className="application-details">
@@ -79,13 +90,11 @@ function ApplicationPage() {
         </span>
 
         <p>
-          <strong>Location:</strong>{" "}
-          {application.location || "Not provided"}
+          <strong>Location:</strong> {application.location || "Not provided"}
         </p>
 
         <p>
-          <strong>Date applied:</strong>{" "}
-          {application.dateApplied || "Not applied yet"}
+          <strong>Date applied:</strong> {formatDate(application.dateApplied)}
         </p>
 
         <p>
@@ -93,24 +102,19 @@ function ApplicationPage() {
         </p>
 
         {application.jobLink && (
-          <p>
-            <a
-              href={application.jobLink}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Job Posting
-            </a>
-          </p>
+          <a
+            href={application.jobLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Job Posting
+          </a>
         )}
 
         {error && <p className="state error">{error}</p>}
 
         <div className="details-actions">
-          <Link
-            to={`/applications/${id}/edit`}
-            className="button-link"
-          >
+          <Link to={`/applications/${id}/edit`} className="button-link">
             Edit
           </Link>
 

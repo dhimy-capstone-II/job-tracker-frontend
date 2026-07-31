@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function EditApplicationPage() {
   // Get the application ID from the URL
   const { id } = useParams();
 
   // Navigate after updating
   const navigate = useNavigate();
-
+  
   // Store the form values
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
@@ -27,7 +29,6 @@ function EditApplicationPage() {
   useEffect(() => {
     // Load the existing application
 
-    const API_URL = import.meta.env.VITE_API_URL;   
     async function getApplication() {
       const response = await fetch(`${API_URL}/api/applications/${id}`);
       const data = await response.json();
@@ -70,102 +71,128 @@ function EditApplicationPage() {
       notes,
     };
 
-    const response = await fetch(`${API_URL}/api/applications/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(application),
-    });
+    console.log("Update button clicked");
+    console.log("Application ID:", id);
+    console.log("API URL:", API_URL);
+    console.log("Sending:", application);
 
-    // Show the backend's message instead of pretending the update worked
-    if (!response.ok) {
+    try {
+      const response = await fetch(`${API_URL}/api/applications/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(application),
+      });
+
       const data = await response.json();
-      setError(data.error || "Something went wrong. Please try again.");
-      return;
-    }
 
-    // Return to the details page
-    navigate(`/applications/${id}`);
+      console.log("Response status:", response.status);
+      console.log("Backend response:", data);
+
+      // Show the backend error message
+      if (!response.ok) {
+        setError(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+
+      // Return to the details page after the update succeeds
+      navigate(`/applications/${id}`);
+    } catch (error) {
+      console.error("Update failed:", error);
+      setError("Could not connect to the backend.");
+    }
   }
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-  if (loadError) return <p className="state error">{loadError}</p>;
+  if (loadError) {
+    return <p className="state error">{loadError}</p>;
+  }
 
   // Display the edit form
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Edit Application</h1>
+    <section className="form-page">
+      <div className="application-form-card">
+        <h1>Edit Application</h1>
 
-      {error && <p className="state error">{error}</p>}
+        <form className="application-form" onSubmit={handleSubmit}>
+          {error && <p className="state error">{error}</p>}
 
-      <label>
-        Company
-        <input
-          value={company}
-          onChange={(event) => setCompany(event.target.value)}
-        />
-      </label>
+          <label>
+            Company
+            <input
+              required
+              value={company}
+              onChange={(event) => setCompany(event.target.value)}
+            />
+          </label>
 
-      <label>
-        Position
-        <input
-          value={position}
-          onChange={(event) => setPosition(event.target.value)}
-        />
-      </label>
+          <label>
+            Position
+            <input
+              required
+              value={position}
+              onChange={(event) => setPosition(event.target.value)}
+            />
+          </label>
 
-      <label>
-        Status
-        <select
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
-        >
-          <option>Saved</option>
-          <option>Applied</option>
-          <option>Interview</option>
-          <option>Offer</option>
-          <option>Rejected</option>
-          <option>Closed</option>
-        </select>
-      </label>
+          <label>
+            Status
+            <select
+              value={status}
+              onChange={(event) => setStatus(event.target.value)}
+            >
+              <option>Saved</option>
+              <option>Applied</option>
+              <option>Interview</option>
+              <option>Offer</option>
+              <option>Rejected</option>
+              <option>Closed</option>
+            </select>
+          </label>
 
-      <label>
-        Location
-        <input
-          value={location}
-          onChange={(event) => setLocation(event.target.value)}
-        />
-      </label>
+          <label>
+            Location
+            <input
+              value={location}
+              onChange={(event) => setLocation(event.target.value)}
+            />
+          </label>
 
-      <label>
-        Date applied
-        <input
-          type="date"
-          value={dateApplied}
-          onChange={(event) => setDateApplied(event.target.value)}
-        />
-      </label>
+          <label>
+            Date applied
+            <input
+              type="date"
+              value={dateApplied}
+              onChange={(event) => setDateApplied(event.target.value)}
+            />
+          </label>
 
-      <label>
-        Job link
-        <input
-          type="url"
-          placeholder="https://example.com/job"
-          value={jobLink}
-          onChange={(event) => setJobLink(event.target.value)}
-        />
-      </label>
+          <label>
+            Job Posting URL
+            <input
+              type="url"
+              placeholder="https://company.com/jobs/123"
+              value={jobLink}
+              onChange={(event) => setJobLink(event.target.value)}
+            />
+          </label>
 
-      <label>
-        Notes
-        <textarea
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-        />
-      </label>
+          <label>
+            Notes
+            <textarea
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+            />
+          </label>
 
-      <button type="submit">Update Application</button>
-    </form>
+          <button type="submit">Update Application</button>
+        </form>
+      </div>
+    </section>
   );
 }
 
