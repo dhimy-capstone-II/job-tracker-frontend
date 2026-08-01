@@ -1,111 +1,695 @@
+/*
+=========================================================
+DESIGN AND ANIMATION INSPIRATION
+=========================================================
+
+Motion:
+https://motion.dev/
+https://motion.dev/docs/react
+
+GSAP:
+https://gsap.com/
+https://gsap.com/docs/v3/
+
+The styling and animations were adapted and implemented
+specifically for the Job Application Tracker project.
+=========================================================
+*/
+
+/* ========================================
+   DESIGN SYSTEM
+======================================== */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --navy: #1f2937;
+  --navy-dark: #111827;
+  --text: #1f2937;
+  --text-soft: #64748b;
+  --page-bg: #f4f4f4;
+  --surface: #ffffff;
+  --border: #d1d5db;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* ========================================
+   DESIGN SYSTEM
+======================================== */
+
+:root {
+  --navy: #1f2937;
+  --navy-dark: #111827;
+  --text: #1f2937;
+  --text-soft: #64748b;
+  --page-bg: #f4f4f4;
+  --surface: #ffffff;
+  --border: #d1d5db;
 }
 
-body {
-  margin: 0;
+/* ========================================
+   CREATE AND EDIT FORM PAGE
+======================================== */
+
+.form-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+
+  background: linear-gradient(135deg,
+      rgba(96, 190, 139, 0.85),
+      rgba(120, 88, 220, 0.9));
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
+.application-form-card {
+  width: 100%;
+  max-width: 700px;
+  padding: 2.5rem;
+  background-color: white;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+}
+
+.application-form-card h1 {
+  margin: 0 0 2rem;
   text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  color: #1e293b;
+  font-size: 2.25rem;
+}
+
+.application-form {
   display: flex;
   flex-direction: column;
+  gap: 1.1rem;
+}
+
+.application-form label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #334155;
+  font-weight: 700;
+}
+
+.application-form input,
+.application-form select,
+.application-form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font: inherit;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.application-form input:focus,
+.application-form select:focus,
+.application-form textarea:focus {
+  outline: none;
+  border-color: #6957e5;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(105, 87, 229, 0.15);
+}
+
+.application-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.application-form button {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.95rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #15b981, #6957e5);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.application-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(105, 87, 229, 0.3);
+}
+
+.application-form button:active {
+  transform: translateY(0);
+}
+
+
+/* ========================================
+   SEARCH AND FILTER CONTROLS
+======================================== */
+
+.application-controls {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.application-controls input,
+.application-controls select {
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.application-controls input {
+  flex: 1;
+}
+
+.application-controls input:focus,
+.application-controls select:focus {
+  border-color: var(--navy);
+  outline: 3px solid rgba(31, 41, 55, 0.12);
+}
+
+/* ========================================
+   FORM PAGE RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 600px) {
+  .form-page {
+    align-items: flex-start;
+    padding: 2rem 1rem;
+  }
+
+  .application-form-card {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .application-form-card h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* ========================================
+   SEARCH CONTROLS RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 700px) {
+  .application-controls {
+    flex-direction: column;
+  }
+}
+
+
+/* ========================================
+   RESET
+======================================== */
+
+* {
   box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+html {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+
+/* ========================================
+   APPLICATION LAYOUT
+======================================== */
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  width: 100%;
+  max-width: 1100px;
+  flex: 1;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+main>section {
+  width: 100%;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 5vw, 2.75rem);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+.subtitle {
+  color: var(--text-soft);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+
+/* ========================================
+   NAVBAR
+======================================== */
+
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 2rem;
+  background: var(--navy);
+  color: white;
+}
+
+nav div {
+  display: flex;
+  gap: 1.25rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+nav a:hover {
+  opacity: 0.8;
+}
+
+
+/* ========================================
+   APPLICATION LIST
+======================================== */
+
+.application-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+
+/*
+  Card motion inspiration:
+  https://motion.dev/docs/react
+*/
+
+/* ========================================
+   APPLICATION CARD
+======================================== */
+
+.application-card {
+  width: 100%;
+  min-height: 155px;
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+
+  transition: box-shadow 0.2s ease;
+}
+
+.application-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+}
+
+.application-card-title {
+  margin: 0 0 0.5rem;
+  color: var(--navy-dark);
+}
+
+.application-card-position {
+  margin: 0 0 1rem;
+  color: #475569;
+}
+
+
+/* ========================================
+   STATUS BADGES
+======================================== */
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-saved {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.badge-applied {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-interview {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-offer {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge-closed {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+
+footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 1.4rem 1rem;
+  background: var(--navy);
+  color: white;
+  text-align: center;
+}
+
+/* ========================================
+   GENERAL RESPONSIVE DESIGN
+======================================== */
+
+@media (min-width: 768px) {
+  .application-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  main {
+    padding: 2rem 1rem;
+  }
+
+  nav {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ========================================
+   FORM FIELD ERROR
+======================================== */
+
+.field-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+
+/* ========================================
+   APPLICATION DETAIL PAGE
+======================================== */
+
+.application-details {
+  width: min(850px, 100%);
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: #334155;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.details-card {
+  padding: 2.5rem;
+  border-radius: 18px;
+
+  background: #111827;
+  color: #f8fafc;
+
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
+}
+
+.details-card h1 {
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.details-position {
+  margin-bottom: 1.5rem;
+  color: #cbd5e1;
+  font-size: 1.2rem;
+}
+
+.details-card p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.details-card strong {
+  color: #a7f3d0;
+}
+
+.details-card a {
+  color: #a7f3d0;
+}
+
+.details-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.button-link,
+.delete-button {
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link {
+  background: #a7f3d0;
+  color: #111827;
+}
+
+.button-link:hover {
+  background: #6ee7b7;
+}
+
+.delete-button {
+  border: 1px solid #fca5a5;
+  background: transparent;
+  color: #fca5a5;
+}
+
+.delete-button:hover {
+  background: #7f1d1d;
+  color: #ffffff;
+}
+
+
+/* ========================================
+   APPLICATION DETAIL PAGE
+======================================== */
+
+.application-details {
+  width: min(850px, 100%);
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: #334155;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.details-card {
+  padding: 2.5rem;
+  border: 1px solid #dbe4ee;
+  border-radius: 18px;
+  background: linear-gradient(135deg,
+      #ffffff,
+      #f7fbff);
+  color: #1f2937;
+  box-shadow: 0 18px 40px rgba(30, 41, 59, 0.12);
+}
+
+.details-card h1 {
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.details-position {
+  margin-bottom: 1.5rem;
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+.details-card p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.details-card strong {
+  color: #0f766e;
+}
+
+.details-card a {
+  color: #2563eb;
+}
+
+.details-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.button-link,
+.delete-button {
+  padding: 0.8rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.details-card .button-link {
+  background: #2563eb;
+  color: white;
+}
+
+.details-card .button-link:hover {
+  background: #1d4ed8;
+}
+
+.delete-button {
+  border: 1px solid #ef4444;
+  background: #fff5f5;
+  color: #b91c1c;
+}
+
+.delete-button:hover {
+  background: #fee2e2;
+}
+
+
+
+.application-card-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.application-card-link h2 {
+  margin-bottom: 1rem;
+}
+
+.application-card-link h2:hover {
+  text-decoration: underline;
+}
+
+.application-position {
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background-color: #e8eefc;
+  color: #294b8f;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.application-card a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.application-card a:hover {
+  text-decoration: none;
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer a:hover {
+  opacity: 0.75;
 }
