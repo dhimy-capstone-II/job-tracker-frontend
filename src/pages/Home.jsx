@@ -140,6 +140,7 @@ return (
       )}
     </div>
 
+    {/*filteredApplications */}  
     {/* Show a message when no applications match. */}
     {filteredApplications.length === 0 ? (
       <p className="state">
