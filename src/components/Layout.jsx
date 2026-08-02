@@ -1,22 +1,31 @@
-// src/components/Layout.jsx
-// Layout is the shared frame for every page.
-// <Outlet /> displays the page that matches the current route.
+// src/components/Navbar.jsx
+// NavLink handles client-side navigation and lets us style the active route.
 
-import { Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-import Navbar from "./Navbar.jsx";
-import Footer from "./Footer.jsx";
+function Navbar() {
+  const linkClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
 
-export default function Layout() {
   return (
-    <div className="app">
-      <Navbar />
+    <header>
+      <nav>
+        <NavLink to="/" className="nav-brand">
+          Job Application Tracker
+        </NavLink>
 
-      <main className="page-content">
-        <Outlet />
-      </main>
+        <div className="nav-links">
+          <NavLink to="/" end className={linkClass}>
+            Home
+          </NavLink>
 
-      <Footer />
-    </div>
+          <NavLink to="/applications/new" className={linkClass}>
+            New Application
+          </NavLink>
+        </div>
+      </nav>
+    </header>
   );
 }
+
+export default Navbar;
