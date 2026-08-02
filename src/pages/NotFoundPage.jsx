@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 
-function NotFoundPage() {
+// Rendered by the "*" route in App.jsx when no other route matches.
+export default function NotFoundPage() {
   return (
-    <section>
-      <h1>404 - Page Not Found</h1>
+    <section className="not-found-page">
+      <h1>404</h1>
+      <p>That page does not exist.</p>
 
-      <Link to="/">Return Home</Link>
+      <Link to="/" className="not-found-link">
+        Go home
+      </Link>
     </section>
   );
 }
-
-export default NotFoundPage;

@@ -10,3 +10,24 @@
   width: 100%;
   flex: 1;
 }
+
+.nav-link
+.nav-link.active
+.nav-brand
+.nav-links
+
+/* not found page */
+.not-found-page {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.not-found-page h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.not-found-link {
+  display: inline-block;
+  margin-top: 1rem;
+}

@@ -1,9 +1,7 @@
-// src/components/Navbar.jsx
-// NavLink handles client-side navigation and lets us style the active route.
-
 import { NavLink } from "react-router-dom";
 
-function Navbar() {
+// NavLink handles client-side navigation and lets us style the active route.
+export default function Navbar() {
   const linkClass = ({ isActive }) =>
     isActive ? "nav-link active" : "nav-link";
 
@@ -15,6 +13,7 @@ function Navbar() {
         </NavLink>
 
         <div className="nav-links">
+          {/* `end` keeps Home active only on the exact "/" route. */}
           <NavLink to="/" end className={linkClass}>
             Home
           </NavLink>
@@ -27,5 +26,3 @@ function Navbar() {
     </header>
   );
 }
-
-export default Navbar;
