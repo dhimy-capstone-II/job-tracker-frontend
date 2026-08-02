@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL;
+import {
+  getApplication,
+  updateApplication,
+} from "../api/applications.js";
 
 function EditApplicationPage() {
-  // Get the application ID from the URL
+  // Get the application ID from the URL.
   const { id } = useParams();
 
-  // Navigate after updating
+  // Navigate after updating.
   const navigate = useNavigate();
 
-  // Store the form values
+  // Store the form values.
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState("Saved");
@@ -20,44 +23,53 @@ function EditApplicationPage() {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Store an error from loading the application
+  // Store an error from loading the application.
   const [loadError, setLoadError] = useState("");
 
-  // Store a validation message returned by the backend
+  // Store a validation message returned by the backend.
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Load the existing application
+    let active = true;
 
-    async function getApplication() {
-      const res = await fetch(`${API_URL}/api/applications/${id}`);
-      const data = await res.json();
+    async function loadApplication() {
+      try {
+        const data = await getApplication(id);
 
-      // Stop here if the application does not exist
-      if (!res.ok) {
-        setLoadError(data.error || "Could not load this application.");
-        setLoading(false);
-        return;
+        if (!active) {
+          return;
+        }
+
+        // Fill the form with the existing data.
+        setCompany(data.company);
+        setPosition(data.position);
+        setStatus(data.status);
+        setLocation(data.location || "");
+        setDateApplied(data.dateApplied || "");
+        setJobLink(data.jobLink || "");
+        setNotes(data.notes || "");
+      } catch (err) {
+        if (active) {
+          setLoadError(err.message);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
-
-      // Fill the form with the existing data
-      setCompany(data.company);
-      setPosition(data.position);
-      setStatus(data.status);
-      setLocation(data.location || "");
-      setDateApplied(data.dateApplied || "");
-      setJobLink(data.jobLink || "");
-      setNotes(data.notes || "");
-      setLoading(false);
     }
-    getApplication();
+
+    loadApplication();
+
+    // Ignore a response that arrives after leaving the page.
+    return () => {
+      active = false;
+    };
   }, [id]);
 
-  // Update the application
+  // Update the application.
   async function handleSubmit(event) {
     event.preventDefault();
-
-    // Clear the error from any previous attempt
     setError("");
 
     const application = {
@@ -70,36 +82,13 @@ function EditApplicationPage() {
       notes,
     };
 
-    console.log("Update button clicked");
-    console.log("Application ID:", id);
-    console.log("API URL:", API_URL);
-    console.log("Sending:", application);
-
     try {
-      const response = await fetch(`${API_URL}/api/applications/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(application),
-      });
+      await updateApplication(id, application);
 
-      const data = await response.json();
-
-      console.log("Response status:", response.status);
-      console.log("Backend response:", data);
-
-      // Show the backend error message
-      if (!response.ok) {
-        setError(data.error || "Something went wrong. Please try again.");
-        return;
-      }
-
-      // Return to the details page after the update succeeds
+      // Return to the details page after the update succeeds.
       navigate(`/applications/${id}`);
-    } catch (error) {
-      console.error("Update failed:", error);
-      setError("Could not connect to the backend.");
+    } catch (err) {
+      setError(err.message);
     }
   }
 
@@ -111,7 +100,6 @@ function EditApplicationPage() {
     return <p className="state error">{loadError}</p>;
   }
 
-  // Display the edit form
   return (
     <section className="form-page">
       <div className="application-form-card">
