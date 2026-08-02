@@ -1,44 +1,41 @@
 import { Route, Routes } from "react-router-dom";
 
-import Navbar from "./components/Navbar.jsx";
-import Footer from "./components/Footer.jsx";
+import Layout from "./components/Layout.jsx";
 
 import Home from "./pages/Home.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 import ApplicationPage from "./pages/ApplicationPage.jsx";
 import CreateApplicationPage from "./pages/CreateApplicationPage.jsx";
 import EditApplicationPage from "./pages/EditApplicationPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
+import "./App.css";
+
 function App() {
   return (
-    <div className="app">
-      <Navbar />
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
 
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
+        <Route
+          path="/applications/new"
+          element={<CreateApplicationPage />}
+        />
 
-          <Route
-            path="/applications/new"
-            element={<CreateApplicationPage />}
-          />
+        <Route
+          path="/applications/:id"
+          element={<ApplicationPage />}
+        />
 
-          <Route
-            path="/applications/:id"
-            element={<ApplicationPage />}
-          />
+        <Route
+          path="/applications/:id/edit"
+          element={<EditApplicationPage />}
+        />
 
-          <Route
-            path="/applications/:id/edit"
-            element={<EditApplicationPage />}
-          />
-
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
-
-      <Footer />
-    </div>
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }
 

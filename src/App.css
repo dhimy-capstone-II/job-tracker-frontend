@@ -1,9 +1,231 @@
-/* src/App.css */
+
+/* ========================================
+   GLOBAL BOX SIZING
+======================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   APPLICATION LAYOUT
+======================================== */
 
 .app {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+.page-content {
+  width: 100%;
+  max-width: none;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ========================================
+   NAVBAR
+======================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background-color: #1f2937;
+}
+
+.navbar {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 2rem;
+  background-color: #1f2937;
+}
+
+.nav-brand {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #a7f3d0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+
+/* ========================================
+   LOGIN PAGE
+======================================== */
+
+.login-page {
+  width: 100%;
+  min-height: calc(100vh - 144px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(96, 190, 139, 0.9),
+    rgba(120, 88, 220, 0.92)
+  );
+}
+
+.login-form-card {
+  width: min(520px, 100%);
+  padding: 2.5rem;
+  border-radius: 18px;
+  background-color: #ffffff;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+}
+
+.login-form-card h1 {
+  margin: 0 0 2rem;
+  color: #1f2937;
+  font-size: 2.25rem;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #334155;
+  font-weight: 700;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #1f2937;
+  font: inherit;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #6957e5;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(105, 87, 229, 0.15);
+}
+
+.login-form button {
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #15b981, #6957e5);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(105, 87, 229, 0.3);
+}
+
+.login-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+/* ========================================
+   ERROR MESSAGE
+======================================== */
+
+.login-error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+
+/* ========================================
+   NOT FOUND PAGE
+======================================== */
+
+.not-found-page {
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.not-found-page h1 {
+  margin-bottom: 0.5rem;
+  font-size: 3rem;
+}
+
+.not-found-link {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 600px) {
+  .navbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .login-page {
+    align-items: flex-start;
+    padding: 2rem 1rem;
+  }
+
+  .login-form-card {
+    padding: 1.5rem;
+  }
 }
 
 .page-content {
@@ -11,23 +233,9 @@
   flex: 1;
 }
 
-.nav-link
-.nav-link.active
-.nav-brand
-.nav-links
-
-/* not found page */
-.not-found-page {
-  text-align: center;
-  padding: 4rem 1rem;
-}
-
-.not-found-page h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-}
-
-.not-found-link {
-  display: inline-block;
-  margin-top: 1rem;
+/* Add comfortable spacing to regular pages. */
+.page-content > section:not(.login-page):not(.form-page) {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3rem 0;
 }

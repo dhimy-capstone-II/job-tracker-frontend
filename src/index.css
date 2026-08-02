@@ -16,20 +16,6 @@ specifically for the Job Application Tracker project.
 =========================================================
 */
 
-/* ========================================
-   DESIGN SYSTEM
-======================================== */
-
-:root {
-  --navy: #1f2937;
-  --navy-dark: #111827;
-  --text: #1f2937;
-  --text-soft: #64748b;
-  --page-bg: #f4f4f4;
-  --surface: #ffffff;
-  --border: #d1d5db;
-}
-
 
 /* ========================================
    DESIGN SYSTEM
@@ -40,169 +26,12 @@ specifically for the Job Application Tracker project.
   --navy-dark: #111827;
   --text: #1f2937;
   --text-soft: #64748b;
-  --page-bg: #f4f4f4;
+  --page-bg: #f4f6f8;
   --surface: #ffffff;
-  --border: #d1d5db;
-}
-
-/* ========================================
-   CREATE AND EDIT FORM PAGE
-======================================== */
-
-.form-page {
-  min-height: calc(100vh - 70px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem 1.5rem;
-
-  background: linear-gradient(135deg,
-      rgba(96, 190, 139, 0.85),
-      rgba(120, 88, 220, 0.9));
-}
-
-.application-form-card {
-  width: 100%;
-  max-width: 700px;
-  padding: 2.5rem;
-  background-color: white;
-  border-radius: 18px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
-}
-
-.application-form-card h1 {
-  margin: 0 0 2rem;
-  text-align: center;
-  color: #1e293b;
-  font-size: 2.25rem;
-}
-
-.application-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-
-.application-form label {
-  display: block;
-  margin-bottom: 0.4rem;
-  color: #334155;
-  font-weight: 700;
-}
-
-.application-form input,
-.application-form select,
-.application-form textarea {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background-color: #f8fafc;
-  color: #1e293b;
-  font: inherit;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.application-form input:focus,
-.application-form select:focus,
-.application-form textarea:focus {
-  outline: none;
-  border-color: #6957e5;
-  background-color: white;
-  box-shadow: 0 0 0 4px rgba(105, 87, 229, 0.15);
-}
-
-.application-form textarea {
-  min-height: 140px;
-  resize: vertical;
-}
-
-.application-form button {
-  width: 100%;
-  margin-top: 0.5rem;
-  padding: 0.95rem 1.25rem;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #15b981, #6957e5);
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.application-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(105, 87, 229, 0.3);
-}
-
-.application-form button:active {
-  transform: translateY(0);
-}
-
-
-/* ========================================
-   SEARCH AND FILTER CONTROLS
-======================================== */
-
-.application-controls {
-  display: flex;
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-
-.application-controls input,
-.application-controls select {
-  padding: 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: var(--surface);
-}
-
-.application-controls input {
-  flex: 1;
-}
-
-.application-controls input:focus,
-.application-controls select:focus {
-  border-color: var(--navy);
-  outline: 3px solid rgba(31, 41, 55, 0.12);
-}
-
-/* ========================================
-   FORM PAGE RESPONSIVE DESIGN
-======================================== */
-
-@media (max-width: 600px) {
-  .form-page {
-    align-items: flex-start;
-    padding: 2rem 1rem;
-  }
-
-  .application-form-card {
-    padding: 1.5rem;
-    border-radius: 14px;
-  }
-
-  .application-form-card h1 {
-    font-size: 1.8rem;
-  }
-}
-
-/* ========================================
-   SEARCH CONTROLS RESPONSIVE DESIGN
-======================================== */
-
-@media (max-width: 700px) {
-  .application-controls {
-    flex-direction: column;
-  }
+  --border: #d7dee7;
+  --accent: #6957e5;
+  --success: #15b981;
+  --danger: #b91c1c;
 }
 
 
@@ -210,7 +39,9 @@ specifically for the Job Application Tracker project.
    RESET
 ======================================== */
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -223,7 +54,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background: var(--page-bg);
+  background-color: var(--page-bg);
   color: var(--text);
   font-family:
     Inter,
@@ -241,79 +72,248 @@ textarea {
   font: inherit;
 }
 
-a {
-  color: inherit;
-}
-
 button,
 a {
   cursor: pointer;
 }
 
+a {
+  color: inherit;
+}
+
 
 /* ========================================
-   APPLICATION LAYOUT
+   ROOT AND PAGE CONTENT
 ======================================== */
 
 #root {
   min-height: 100vh;
 }
 
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 main {
   width: 100%;
-  max-width: 1100px;
   flex: 1;
-  margin: 0 auto;
-  padding: 3rem 2rem;
 }
 
-main>section {
-  width: 100%;
+.page-content > section:not(.login-page):not(.form-page) {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3rem 0;
 }
 
 h1 {
   margin: 0 0 0.75rem;
+  color: var(--navy-dark);
   font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.15;
 }
 
+.page-description,
 .subtitle {
   color: var(--text-soft);
 }
 
+.page-description {
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  margin-top: 0;
+}
+
 
 /* ========================================
-   NAVBAR
+   CREATE AND EDIT FORM PAGE
 ======================================== */
 
-nav {
+.form-page {
   width: 100%;
+  min-height: calc(100vh - 144px);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 2rem;
-  background: var(--navy);
-  color: white;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(96, 190, 139, 0.85),
+      rgba(120, 88, 220, 0.9)
+    );
 }
 
-nav div {
+.application-form-card {
+  width: 100%;
+  max-width: 700px;
+  padding: 2.5rem;
+  border-radius: 18px;
+  background-color: var(--surface);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+}
+
+.application-form-card h1 {
+  margin: 0 0 2rem;
+  color: #1e293b;
+  font-size: 2.25rem;
+  text-align: center;
+}
+
+.application-form {
   display: flex;
-  gap: 1.25rem;
+  flex-direction: column;
+  gap: 1.1rem;
 }
 
-nav a {
+.application-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: #334155;
+  font-weight: 700;
+}
+
+.application-form input,
+.application-form select,
+.application-form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #1e293b;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.application-form input:focus,
+.application-form select:focus,
+.application-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 4px rgba(105, 87, 229, 0.15);
+}
+
+.application-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.application-form button {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.95rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    var(--success),
+    var(--accent)
+  );
   color: white;
-  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
-nav a:hover {
-  opacity: 0.8;
+.application-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(105, 87, 229, 0.3);
+}
+
+.application-form button:active {
+  transform: translateY(0);
+}
+
+.application-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+/* ========================================
+   ERROR AND STATE MESSAGES
+======================================== */
+
+.state,
+.status-message {
+  margin-top: 1rem;
+}
+
+.error,
+.status-message-error {
+  color: var(--danger);
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+
+/* ========================================
+   SEARCH AND FILTER CONTROLS
+======================================== */
+
+.application-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.application-controls input,
+.application-controls select {
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+.application-controls input {
+  width: 100%;
+}
+
+.application-controls label {
+  color: #334155;
+  font-weight: 600;
+}
+
+.application-controls input:focus,
+.application-controls select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(105, 87, 229, 0.12);
+}
+
+.status-filter-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.clear-filters-button {
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--navy);
+  color: white;
+  font-weight: 700;
+}
+
+.clear-filters-button:hover {
+  background-color: var(--navy-dark);
 }
 
 
@@ -324,15 +324,10 @@ nav a:hover {
 .application-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
+  gap: 1.5rem;
   margin-top: 2rem;
 }
 
-
-/*
-  Card motion inspiration:
-  https://motion.dev/docs/react
-*/
 
 /* ========================================
    APPLICATION CARD
@@ -340,32 +335,55 @@ nav a:hover {
 
 .application-card {
   width: 100%;
-  min-height: 155px;
-  display: block;
-  padding: 1.5rem;
+  min-height: 180px;
+  padding: 1.75rem;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
+  border-radius: 16px;
+  background-color: var(--surface);
   color: var(--text);
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
 
-  transition: box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .application-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+  transform: translateY(-4px);
+  border-color: #a5b4fc;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.13);
 }
 
-.application-card-title {
+.application-card-link {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.application-card-link:hover {
+  text-decoration: none;
+}
+
+.application-card-title,
+.application-card-link h2 {
   margin: 0 0 0.5rem;
   color: var(--navy-dark);
+  font-size: 1.5rem;
 }
 
-.application-card-position {
-  margin: 0 0 1rem;
+.application-card-link h2:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.application-card-position,
+.application-position {
+  margin: 0 0 1.25rem;
   color: #475569;
+  font-size: 1rem;
 }
 
 
@@ -374,94 +392,48 @@ nav a:hover {
 ======================================== */
 
 .badge {
-  display: inline-block;
-  padding: 0.35rem 0.7rem;
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  margin-top: auto;
+  padding: 0.4rem 0.8rem;
   border-radius: 999px;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .badge-saved {
-  background: #e2e8f0;
+  background-color: #e2e8f0;
   color: #334155;
 }
 
 .badge-applied {
-  background: #dbeafe;
+  background-color: #dbeafe;
   color: #1d4ed8;
 }
 
 .badge-interview {
-  background: #fef3c7;
+  background-color: #fef3c7;
   color: #92400e;
 }
 
 .badge-offer {
-  background: #dcfce7;
+  background-color: #dcfce7;
   color: #166534;
 }
 
 .badge-rejected {
-  background: #fee2e2;
+  background-color: #fee2e2;
   color: #b91c1c;
 }
 
 .badge-closed {
-  background: #e5e7eb;
+  background-color: #e5e7eb;
   color: #4b5563;
 }
 
-/* ========================================
-   FOOTER
-======================================== */
-
-footer {
-  width: 100%;
-  margin-top: auto;
-  padding: 1.4rem 1rem;
-  background: var(--navy);
-  color: white;
-  text-align: center;
-}
-
-/* ========================================
-   GENERAL RESPONSIVE DESIGN
-======================================== */
-
-@media (min-width: 768px) {
-  .application-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 700px) {
-  main {
-    padding: 2rem 1rem;
-  }
-
-  nav {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  nav {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-/* ========================================
-   FORM FIELD ERROR
-======================================== */
-
-.field-error {
-  color: #b91c1c;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
 
 /* ========================================
    APPLICATION DETAIL PAGE
@@ -482,107 +454,20 @@ footer {
 
 .back-link:hover {
   text-decoration: underline;
-}
-
-.details-card {
-  padding: 2.5rem;
-  border-radius: 18px;
-
-  background: #111827;
-  color: #f8fafc;
-
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
-}
-
-.details-card h1 {
-  margin-bottom: 0.5rem;
-  color: #ffffff;
-}
-
-.details-position {
-  margin-bottom: 1.5rem;
-  color: #cbd5e1;
-  font-size: 1.2rem;
-}
-
-.details-card p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-.details-card strong {
-  color: #a7f3d0;
-}
-
-.details-card a {
-  color: #a7f3d0;
-}
-
-.details-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.button-link,
-.delete-button {
-  padding: 0.8rem 1.25rem;
-  border-radius: 999px;
-
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.button-link {
-  background: #a7f3d0;
-  color: #111827;
-}
-
-.button-link:hover {
-  background: #6ee7b7;
-}
-
-.delete-button {
-  border: 1px solid #fca5a5;
-  background: transparent;
-  color: #fca5a5;
-}
-
-.delete-button:hover {
-  background: #7f1d1d;
-  color: #ffffff;
-}
-
-
-/* ========================================
-   APPLICATION DETAIL PAGE
-======================================== */
-
-.application-details {
-  width: min(850px, 100%);
-  margin: 0 auto;
-}
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  color: #334155;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.back-link:hover {
-  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .details-card {
   padding: 2.5rem;
   border: 1px solid #dbe4ee;
   border-radius: 18px;
-  background: linear-gradient(135deg,
+  background:
+    linear-gradient(
+      135deg,
       #ffffff,
-      #f7fbff);
-  color: #1f2937;
+      #f7fbff
+    );
+  color: var(--text);
   box-shadow: 0 18px 40px rgba(30, 41, 59, 0.12);
 }
 
@@ -593,7 +478,7 @@ footer {
 
 .details-position {
   margin-bottom: 1.5rem;
-  color: #64748b;
+  color: var(--text-soft);
   font-size: 1.2rem;
 }
 
@@ -612,6 +497,7 @@ footer {
 
 .details-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-top: 2rem;
 }
@@ -625,63 +511,37 @@ footer {
 }
 
 .details-card .button-link {
-  background: #2563eb;
+  background-color: #2563eb;
   color: white;
 }
 
 .details-card .button-link:hover {
-  background: #1d4ed8;
+  background-color: #1d4ed8;
 }
 
 .delete-button {
   border: 1px solid #ef4444;
-  background: #fff5f5;
-  color: #b91c1c;
+  background-color: #fff5f5;
+  color: var(--danger);
 }
 
 .delete-button:hover {
-  background: #fee2e2;
+  background-color: #fee2e2;
 }
 
 
+/* ========================================
+   FOOTER
+======================================== */
 
-.application-card-link {
-  display: block;
-  height: 100%;
-  color: inherit;
-  text-decoration: none;
-}
-
-.application-card-link h2 {
-  margin-bottom: 1rem;
-}
-
-.application-card-link h2:hover {
-  text-decoration: underline;
-}
-
-.application-position {
-  margin-bottom: 1rem;
-  color: var(--text-muted);
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  background-color: #e8eefc;
-  color: #294b8f;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.application-card a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.application-card a:hover {
-  text-decoration: none;
+footer,
+.footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 1.4rem 1rem;
+  background-color: var(--navy);
+  color: white;
+  text-align: center;
 }
 
 .footer a {
@@ -692,4 +552,52 @@ footer {
 
 .footer a:hover {
   opacity: 0.75;
+}
+
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (min-width: 768px) {
+  .application-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .page-content > section:not(.login-page):not(.form-page) {
+    width: min(100% - 2rem, 1100px);
+    padding: 2rem 0;
+  }
+
+  .application-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .status-filter-control {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-page {
+    align-items: flex-start;
+    padding: 2rem 1rem;
+  }
+
+  .application-form-card {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .application-form-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .details-card {
+    padding: 1.5rem;
+  }
 }
