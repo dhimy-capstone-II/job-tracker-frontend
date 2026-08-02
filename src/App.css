@@ -1,0 +1,12 @@
+/* src/App.css */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  width: 100%;
+  flex: 1;
+}
