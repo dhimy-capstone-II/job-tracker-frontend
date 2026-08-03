@@ -16,7 +16,6 @@ specifically for the Job Application Tracker project.
 =========================================================
 */
 
-
 /* ========================================
    DESIGN SYSTEM
 ======================================== */
@@ -33,7 +32,6 @@ specifically for the Job Application Tracker project.
   --success: #15b981;
   --danger: #b91c1c;
 }
-
 
 /* ========================================
    RESET
@@ -84,7 +82,6 @@ a {
   color: inherit;
 }
 
-
 /* ========================================
    ROOT AND MAIN CONTENT
 ======================================== */
@@ -97,7 +94,6 @@ main {
   width: 100%;
   flex: 1;
 }
-
 
 /* ========================================
    TYPOGRAPHY
@@ -123,6 +119,37 @@ h1 {
   margin-top: 0;
 }
 
+/* ========================================
+   NAVIGATION LINKS
+======================================== */
+
+.nav-signup-link {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-signup-link:hover {
+  color: #a7f3d0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ========================================
+   LOGIN AND SIGNUP FORM SPACING
+======================================== */
+
+.login-page .application-form {
+  gap: 1rem;
+}
+
+.auth-divider {
+  margin: 1.1rem 0;
+}
+
+.auth-switch {
+  margin-top: 1rem;
+}
 
 /* ========================================
    CREATE AND EDIT FORM PAGE
@@ -163,7 +190,6 @@ h1 {
   resize: vertical;
 }
 
-
 /* ========================================
    ERROR AND STATE MESSAGES
 ======================================== */
@@ -177,7 +203,6 @@ h1 {
 .status-message-error {
   color: var(--danger);
 }
-
 
 /* ========================================
    SEARCH AND FILTER CONTROLS
@@ -234,7 +259,6 @@ h1 {
   background-color: var(--navy-dark);
 }
 
-
 /* ========================================
    APPLICATION LIST
 ======================================== */
@@ -245,7 +269,6 @@ h1 {
   gap: 1.5rem;
   margin-top: 2rem;
 }
-
 
 /* ========================================
    APPLICATION CARD
@@ -303,7 +326,6 @@ h1 {
   font-size: 1rem;
 }
 
-
 /* ========================================
    STATUS BADGES
 ======================================== */
@@ -350,7 +372,6 @@ h1 {
   background-color: #e5e7eb;
   color: #4b5563;
 }
-
 
 /* ========================================
    APPLICATION DETAIL PAGE
@@ -445,31 +466,33 @@ h1 {
   background-color: #fee2e2;
 }
 
-
 /* ========================================
    FOOTER
 ======================================== */
 
-footer,
 .footer {
   width: 100%;
-  margin-top: auto;
-  padding: 1.4rem 1rem;
-  background-color: var(--navy);
-  color: #ffffff;
+  padding: 1rem;
+  background: #1f2937;
+  color: #cbd5e1;
   text-align: center;
 }
 
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
 .footer a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
 .footer a:hover {
   opacity: 0.75;
 }
-
 
 /* ========================================
    RESPONSIVE DESIGN
@@ -510,5 +533,16 @@ footer,
 
   .details-card {
     padding: 1.5rem;
+  }
+}
+
+@media (max-height: 800px) {
+  .login-page {
+    align-items: flex-start;
+    padding: 1.5rem 1rem;
+  }
+
+  .login-form-card {
+    padding: 1.5rem 2rem;
   }
 }

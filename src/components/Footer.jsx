@@ -2,7 +2,7 @@ function Footer() {
   return (
     <footer className="footer">
       <p>
-        Job Application Tracker · Design inspired by{" "}
+        Job Application Tracker by Dhimy Jean · Design inspired by{" "}
         <a
           href="https://gsap.com/"
           target="_blank"

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import ApplicationCard from "../components/ApplicationCard.jsx";
 import { getApplications } from "../api/applications.js";
 
-function Home() {
+function Home({ user }) {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -12,8 +12,15 @@ function Home() {
   const [statusFilter, setStatusFilter] = useState("All");
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     async function loadApplications() {
       try {
+        setLoadError("");
+
         const data = await getApplications();
         setApplications(data);
       } catch (error) {
@@ -24,19 +31,49 @@ function Home() {
     }
 
     loadApplications();
-  }, []);
+  }, [user]);
 
   const filteredApplications = applications.filter((application) => {
+    const searchText = search.toLowerCase();
+
     const matchesSearch =
-      application.company.toLowerCase().includes(search.toLowerCase()) ||
-      application.position.toLowerCase().includes(search.toLowerCase()) ||
-      application.status.toLowerCase().includes(search.toLowerCase());
+      application.company.toLowerCase().includes(searchText) ||
+      application.position.toLowerCase().includes(searchText) ||
+      application.status.toLowerCase().includes(searchText);
 
     const matchesStatus =
       statusFilter === "All" || application.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
+
+  // Public home page for logged-out users.
+  if (!user) {
+    return (
+      <section className="public-home">
+        <div className="public-home-card">
+          <p className="public-home-eyebrow">Organize your job search</p>
+
+          <h1>Job Application Tracker</h1>
+
+          <p className="public-home-description">
+            Save opportunities, track application progress, and manage your job
+            search in one place.
+          </p>
+
+          <div className="public-home-actions">
+            <Link to="/login" className="primary-link">
+              Log In
+            </Link>
+
+            <Link to="/signup" className="secondary-link">
+              Create Account
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (loading) {
     return (
@@ -67,9 +104,7 @@ function Home() {
 
       <p className="subtitle">
         {filteredApplications.length}{" "}
-        {filteredApplications.length === 1
-          ? "application"
-          : "applications"}
+        {filteredApplications.length === 1 ? "application" : "applications"}
       </p>
 
       <div className="application-controls">
@@ -121,10 +156,7 @@ function Home() {
       ) : (
         <div className="application-grid">
           {filteredApplications.map((application) => (
-            <ApplicationCard
-              key={application.id}
-              application={application}
-            />
+            <ApplicationCard key={application.id} application={application} />
           ))}
         </div>
       )}

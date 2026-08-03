@@ -13,11 +13,7 @@ import CreateApplicationPage from "./pages/CreateApplicationPage.jsx";
 import EditApplicationPage from "./pages/EditApplicationPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
-import {
-  getMe,
-  syncUser,
-  logoutRequest,
-} from "./api/auth.js";
+import { getMe, syncUser, logoutRequest } from "./api/auth.js";
 
 import "./App.css";
 
@@ -35,9 +31,7 @@ function App() {
   } = useAuth0();
 
   const isLoading =
-    isCheckingSession ||
-    isAuth0Loading ||
-    (isAuth0User && !user && !authError);
+    isCheckingSession || isAuth0Loading || (isAuth0User && !user && !authError);
 
   // Check local JWT cookie
   useEffect(() => {
@@ -64,9 +58,7 @@ function App() {
         const token = await getAccessTokenSilently();
 
         const dbUser = await syncUser(token, {
-          username:
-            auth0User.nickname ||
-            auth0User.email?.split("@")[0],
+          username: auth0User.nickname || auth0User.email?.split("@")[0],
         });
 
         setUser(dbUser);
@@ -79,11 +71,7 @@ function App() {
     }
 
     saveAuth0User();
-  }, [
-    isAuth0User,
-    auth0User,
-    getAccessTokenSilently,
-  ]);
+  }, [isAuth0User, auth0User, getAccessTokenSilently]);
 
   async function handleLogout() {
     try {
@@ -109,42 +97,18 @@ function App() {
     <Routes>
       <Route
         element={
-          <Layout
-            user={user}
-            onLogout={handleLogout}
-            authError={authError}
-          />
+          <Layout user={user} onLogout={handleLogout} authError={authError} />
         }
       >
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute
-              user={user}
-              isLoading={isLoading}
-            >
-              <Home />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
-        <Route
-          path="/login"
-          element={<LoginPage setUser={setUser} />}
-        />
-
-        <Route
-          path="/signup"
-          element={<SignupPage setUser={setUser} />}
-        />
+        <Route path="/signup" element={<SignupPage setUser={setUser} />} />
 
         <Route
           path="/applications/new"
           element={
-            <ProtectedRoute
-              user={user}
-              isLoading={isLoading}
-            >
+            <ProtectedRoute user={user} isLoading={isLoading}>
               <CreateApplicationPage />
             </ProtectedRoute>
           }
@@ -153,10 +117,7 @@ function App() {
         <Route
           path="/applications/:id"
           element={
-            <ProtectedRoute
-              user={user}
-              isLoading={isLoading}
-            >
+            <ProtectedRoute user={user} isLoading={isLoading}>
               <ApplicationPage />
             </ProtectedRoute>
           }
@@ -165,19 +126,13 @@ function App() {
         <Route
           path="/applications/:id/edit"
           element={
-            <ProtectedRoute
-              user={user}
-              isLoading={isLoading}
-            >
+            <ProtectedRoute user={user} isLoading={isLoading}>
               <EditApplicationPage />
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
