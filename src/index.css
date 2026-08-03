@@ -546,3 +546,62 @@ h1 {
     padding: 1.5rem 2rem;
   }
 }
+
+.application-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.application-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.application-form label {
+  color: #334155;
+  font-weight: 600;
+}
+
+.application-form input,
+.application-form select,
+.application-form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #1f2937;
+  font: inherit;
+}
+
+.application-form textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.application-form input:focus,
+.application-form select:focus,
+.application-form textarea:focus {
+  outline: none;
+  border-color: #6957e5;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(105, 87, 229, 0.15);
+}
+
+.application-form button[type="submit"] {
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #15b981, #6957e5);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.application-form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(105, 87, 229, 0.3);
+}
