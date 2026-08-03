@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import {
-  deleteApplication,
-  getApplication,
-} from "../api/applications.js";
+import { deleteApplication, getApplication } from "../api/applications.js";
 
 function ApplicationPage() {
   // Get the application ID from the URL.
@@ -23,23 +20,18 @@ function ApplicationPage() {
   useEffect(() => {
     let active = true;
 
-    async function loadApplication() {
-      try {
-        const data = await getApplication(id);
-
+    getApplication(id)
+      .then((data) => {
         if (active) {
           setApplication(data);
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         if (active) {
           setLoadError(err.message);
         }
-      }
-    }
+      });
 
-    loadApplication();
-
-    // Ignore a response that arrives after leaving the page.
     return () => {
       active = false;
     };
@@ -88,29 +80,22 @@ function ApplicationPage() {
       <div className="details-card">
         <h1>{application.company}</h1>
 
-        <p className="details-position">
-          {application.position}
-        </p>
+        <p className="details-position">{application.position}</p>
 
-        <span
-          className={`badge badge-${application.status.toLowerCase()}`}
-        >
+        <span className={`badge badge-${application.status.toLowerCase()}`}>
           {application.status}
         </span>
 
         <p>
-          <strong>Location:</strong>{" "}
-          {application.location || "Not provided"}
+          <strong>Location:</strong> {application.location || "Not provided"}
         </p>
 
         <p>
-          <strong>Date applied:</strong>{" "}
-          {formatDate(application.dateApplied)}
+          <strong>Date applied:</strong> {formatDate(application.dateApplied)}
         </p>
 
         <p>
-          <strong>Notes:</strong>{" "}
-          {application.notes || "No notes"}
+          <strong>Notes:</strong> {application.notes || "No notes"}
         </p>
 
         {application.jobLink && (
@@ -126,10 +111,7 @@ function ApplicationPage() {
         {error && <p className="state error">{error}</p>}
 
         <div className="details-actions">
-          <Link
-            to={`/applications/${id}/edit`}
-            className="button-link"
-          >
+          <Link to={`/applications/${id}/edit`} className="button-link">
             Edit
           </Link>
 
