@@ -1,31 +1,33 @@
-// src/components/Navbar.jsx
-// NavLink handles client-side navigation and lets us style the active route.
+// src/components/Layout.jsx
 
-import { NavLink } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-function Navbar() {
-  const linkClass = ({ isActive }) =>
-    isActive ? "nav-link active" : "nav-link";
+import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
 
+export default function Layout({
+  user,
+  onLogout,
+  authError,
+}) {
   return (
-    <header>
-      <nav>
-        <NavLink to="/" className="nav-brand">
-          Job Application Tracker
-        </NavLink>
+    <div className="app">
+      <Navbar user={user} onLogout={onLogout} />
 
-        <div className="nav-links">
-          <NavLink to="/" end className={linkClass}>
-            Home
-          </NavLink>
+      <main className="page-content">
+        {authError && (
+          <p
+            role="alert"
+            className="auth-error-message"
+          >
+            {authError}
+          </p>
+        )}
 
-          <NavLink to="/applications/new" className={linkClass}>
-            New Application
-          </NavLink>
-        </div>
-      </nav>
-    </header>
+        <Outlet />
+      </main>
+
+      <Footer />
+    </div>
   );
 }
-
-export default Navbar;
