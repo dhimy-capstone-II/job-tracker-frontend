@@ -13,13 +13,18 @@ import CreateApplicationPage from "./pages/CreateApplicationPage.jsx";
 import EditApplicationPage from "./pages/EditApplicationPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
-import { getMe, syncUser, logoutRequest } from "./api/auth.js";
+import {
+  getMe,
+  syncUser,
+  logoutRequest,
+} from "./api/auth.js";
 
 import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [isCheckingSession, setIsCheckingSession] =
+    useState(true);
   const [authError, setAuthError] = useState(null);
 
   const {
@@ -31,9 +36,11 @@ function App() {
   } = useAuth0();
 
   const isLoading =
-    isCheckingSession || isAuth0Loading || (isAuth0User && !user && !authError);
+    isCheckingSession ||
+    isAuth0Loading ||
+    (isAuth0User && !user && !authError);
 
-  // Check local JWT cookie
+  // Check for a local JWT cookie.
   useEffect(() => {
     async function checkIfLoggedIn() {
       try {
@@ -49,16 +56,20 @@ function App() {
     checkIfLoggedIn();
   }, []);
 
-  // Sync Auth0 user
+  // Sync an Auth0 user with the backend database.
   useEffect(() => {
-    if (!isAuth0User || !auth0User) return;
+    if (!isAuth0User || !auth0User) {
+      return;
+    }
 
     async function saveAuth0User() {
       try {
         const token = await getAccessTokenSilently();
 
         const dbUser = await syncUser(token, {
-          username: auth0User.nickname || auth0User.email?.split("@")[0],
+          username:
+            auth0User.nickname ||
+            auth0User.email?.split("@")[0],
         });
 
         setUser(dbUser);
@@ -71,13 +82,16 @@ function App() {
     }
 
     saveAuth0User();
-  }, [isAuth0User, auth0User, getAccessTokenSilently]);
+  }, [
+    isAuth0User,
+    auth0User,
+    getAccessTokenSilently,
+  ]);
 
   async function handleLogout() {
     try {
       await logoutRequest();
     } catch (error) {
-      // Still log the user out locally.
       console.error("Logout failed:", error.message);
     }
 
@@ -97,18 +111,35 @@ function App() {
     <Routes>
       <Route
         element={
-          <Layout user={user} onLogout={handleLogout} authError={authError} />
+          <Layout
+            user={user}
+            onLogout={handleLogout}
+            authError={authError}
+          />
         }
       >
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage setUser={setUser} />} />
+        <Route
+          path="/"
+          element={<Home user={user} />}
+        />
 
-        <Route path="/signup" element={<SignupPage setUser={setUser} />} />
+        <Route
+          path="/login"
+          element={<LoginPage setUser={setUser} />}
+        />
+
+        <Route
+          path="/signup"
+          element={<SignupPage setUser={setUser} />}
+        />
 
         <Route
           path="/applications/new"
           element={
-            <ProtectedRoute user={user} isLoading={isLoading}>
+            <ProtectedRoute
+              user={user}
+              isLoading={isLoading}
+            >
               <CreateApplicationPage />
             </ProtectedRoute>
           }
@@ -117,7 +148,10 @@ function App() {
         <Route
           path="/applications/:id"
           element={
-            <ProtectedRoute user={user} isLoading={isLoading}>
+            <ProtectedRoute
+              user={user}
+              isLoading={isLoading}
+            >
               <ApplicationPage />
             </ProtectedRoute>
           }
@@ -126,13 +160,19 @@ function App() {
         <Route
           path="/applications/:id/edit"
           element={
-            <ProtectedRoute user={user} isLoading={isLoading}>
+            <ProtectedRoute
+              user={user}
+              isLoading={isLoading}
+            >
               <EditApplicationPage />
             </ProtectedRoute>
           }
         />
 
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
       </Route>
     </Routes>
   );
