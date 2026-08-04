@@ -1,58 +1,55 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL;
+import { deleteApplication, getApplication } from "../api/applications.js";
 
 function ApplicationPage() {
-  // Get the application ID from the URL
+  // Get the application ID from the URL.
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Store one application
+  // Store one application.
   const [application, setApplication] = useState(null);
 
-  // Store an error from loading the application
+  // Store an error from loading the application.
   const [loadError, setLoadError] = useState("");
 
-  // Store an error from deleting the application
+  // Store an error from deleting the application.
   const [error, setError] = useState("");
-  
+
   useEffect(() => {
-    // Fetch one application
-    async function getApplication() {
-      const response = await fetch(`${API_URL}/api/applications/${id}`);
-      const data = await response.json();
+    let active = true;
 
-      // Stop here if the application does not exist
-      if (!response.ok) {
-        setLoadError(data.error || "Could not load this application.");
-        return;
-      }
+    getApplication(id)
+      .then((data) => {
+        if (active) {
+          setApplication(data);
+        }
+      })
+      .catch((err) => {
+        if (active) {
+          setLoadError(err.message);
+        }
+      });
 
-      setApplication(data);
-    }
-
-    getApplication();
+    return () => {
+      active = false;
+    };
   }, [id]);
 
-  // Delete the application
   async function handleDelete() {
-    if (!window.confirm("Delete this application?")) return;
-
-    setError("");
-
-    const response = await fetch(`${API_URL}/api/applications/${id}`, {
-      method: "DELETE",
-    });
-
-    // Stay on the page and explain the problem instead of failing silently
-    if (!response.ok) {
-      setError("Could not delete this application. Please try again.");
+    if (!window.confirm("Delete this application?")) {
       return;
     }
 
-    // Navigate home after deletion
-    navigate("/");
+    setError("");
+
+    try {
+      await deleteApplication(id);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   if (loadError) {
@@ -74,7 +71,6 @@ function ApplicationPage() {
     return `${month}/${day}/${year}`;
   }
 
-  // Display the application
   return (
     <section className="application-details">
       <Link to="/" className="back-link">
@@ -83,6 +79,7 @@ function ApplicationPage() {
 
       <div className="details-card">
         <h1>{application.company}</h1>
+
         <p className="details-position">{application.position}</p>
 
         <span className={`badge badge-${application.status.toLowerCase()}`}>

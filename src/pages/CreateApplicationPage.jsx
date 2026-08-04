@@ -4,10 +4,8 @@ import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function CreateApplicationPage() {
-  // Navigate to another page after creating the application
   const navigate = useNavigate();
 
-  // Store the value of each form input
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState("Saved");
@@ -16,133 +14,288 @@ function CreateApplicationPage() {
   const [jobLink, setJobLink] = useState("");
   const [notes, setNotes] = useState("");
 
-  // Store a validation message returned by the backend
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Submit the form and create a new application
   async function handleSubmit(event) {
-    // Prevent the page from refreshing
     event.preventDefault();
 
-    // Clear the error from any previous attempt
     setError("");
+    setIsSubmitting(true);
 
-    // Build the new application object
     const application = {
-      company,
-      position,
+      company: company.trim(),
+      position: position.trim(),
       status,
-      location,
-      dateApplied,
-      jobLink,
-      notes,
+      location: location.trim() || null,
+      dateApplied: dateApplied || null,
+      jobLink: jobLink.trim() || null,
+      notes: notes.trim() || null,
     };
 
-    // Send the new application to the backend
-    const response = await fetch(`${API_URL}/api/applications`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(application),
-    });
+    try {
+      const response = await fetch(`${API_URL}/api/applications`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(application),
+      });
 
-    // Read the application returned by the backend
-    const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
-    // Show the backend's message instead of navigating to a broken page
-    if (!response.ok) {
-      setError(data.error || "Something went wrong. Please try again.");
-      return;
+      if (!response.ok) {
+        setError(
+          data.error ||
+            data.message ||
+            "Something went wrong. Please try again."
+        );
+        return;
+      }
+
+      navigate(`/applications/${data.id}`);
+    } catch (requestError) {
+      console.error("Create application error:", requestError);
+      setError("Could not connect to the backend. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Navigate to the new application's details page
-    navigate(`/applications/${data.id}`);
   }
 
+  return (
+    <main className="form-page">
+      <section
+        className="application-form-card"
+        aria-labelledby="new-application-heading"
+      >
+        <div className="form-header">
+          <p className="form-eyebrow">Job Tracker</p>
 
-  // Display the create application page
-return (
-  <section className="form-page">
-    <div className="application-form-card">
-      <h1>New Application</h1>
+          <h1 id="new-application-heading">
+            New Application
+          </h1>
 
-      {/* Submit the form to create an application */}
-      <form className="application-form" onSubmit={handleSubmit}>
-        {error && <p className="state error">{error}</p>}
+          <p className="form-description">
+            Add a new job application and track its progress.
+          </p>
+        </div>
 
-        <label>
-          Company
-          <input
-            value={company}
-            onChange={(event) => setCompany(event.target.value)}
-          />
-        </label>
+        <form
+          className="application-form"
+          onSubmit={handleSubmit}
+          noValidate
+        >
+          {error && (
+            <div
+              id="application-error-message"
+              className="application-error"
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+            >
+              <span
+                className="application-error-icon"
+                aria-hidden="true"
+              >
+                !
+              </span>
 
-        <label>
-          Position
-          <input
-            value={position}
-            onChange={(event) => setPosition(event.target.value)}
-          />
-        </label>
-
-        <label>
-          Status
-          <select
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-          >
-            <option>Saved</option>
-            <option>Applied</option>
-            <option>Interview</option>
-            <option>Offer</option>
-            <option>Rejected</option>
-            <option>Closed</option>
-          </select>
-        </label>
-
-        <label>
-          Location
-          <input
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
-          />
-        </label>
-
-        <label>
-          Date applied
-          <input
-            type="date"
-            value={dateApplied}
-            onChange={(event) => setDateApplied(event.target.value)}
-          />
-
-          {error.toLowerCase().includes("date") && (
-            <span className="field-error">{error}</span>
+              <span>{error}</span>
+            </div>
           )}
-        </label>
 
-        <label>
-          Job link
-          <input
-            type="url"
-            placeholder="https://company.com/jobs/123"
-            value={jobLink}
-            onChange={(event) => setJobLink(event.target.value)}
-          />
-        </label>
+          <div className="form-grid">
+            <div className="form-group">
+              <label htmlFor="company">
+                Company
+                <span
+                  className="required-mark"
+                  aria-hidden="true"
+                >
+                  *
+                </span>
+              </label>
 
-        <label>
-          Notes
-          <textarea
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-          />
-        </label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                value={company}
+                onChange={(event) => {
+                  setCompany(event.target.value);
 
-        <button type="submit">Save Application</button>
-      </form>
-    </div>
-  </section>
+                  if (error) {
+                    setError("");
+                  }
+                }}
+                placeholder="Example: OpenAI"
+                autoComplete="organization"
+                aria-required="true"
+                aria-invalid={Boolean(error)}
+                aria-describedby={
+                  error
+                    ? "application-error-message"
+                    : undefined
+                }
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="position">
+                Position
+                <span
+                  className="required-mark"
+                  aria-hidden="true"
+                >
+                  *
+                </span>
+              </label>
+
+              <input
+                id="position"
+                name="position"
+                type="text"
+                value={position}
+                onChange={(event) => {
+                  setPosition(event.target.value);
+
+                  if (error) {
+                    setError("");
+                  }
+                }}
+                placeholder="Example: Software Engineer"
+                autoComplete="organization-title"
+                aria-required="true"
+                aria-invalid={Boolean(error)}
+                aria-describedby={
+                  error
+                    ? "application-error-message"
+                    : undefined
+                }
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="status">
+                Status
+              </label>
+
+              <select
+                id="status"
+                name="status"
+                value={status}
+                onChange={(event) =>
+                  setStatus(event.target.value)
+                }
+              >
+                <option value="Saved">Saved</option>
+                <option value="Applied">Applied</option>
+                <option value="Interview">
+                  Interview
+                </option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">
+                  Rejected
+                </option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="location">
+                Location
+              </label>
+
+              <input
+                id="location"
+                name="location"
+                type="text"
+                value={location}
+                onChange={(event) =>
+                  setLocation(event.target.value)
+                }
+                placeholder="Example: New York, NY or Remote"
+                autoComplete="address-level2"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dateApplied">
+                Date applied
+              </label>
+
+              <input
+                id="dateApplied"
+                name="dateApplied"
+                type="date"
+                value={dateApplied}
+                onChange={(event) =>
+                  setDateApplied(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="jobLink">
+                Job link
+              </label>
+
+              <input
+                id="jobLink"
+                name="jobLink"
+                type="url"
+                placeholder="https://company.com/jobs/123"
+                value={jobLink}
+                onChange={(event) =>
+                  setJobLink(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="form-group form-group-full">
+              <label htmlFor="notes">
+                Notes
+              </label>
+
+              <textarea
+                id="notes"
+                name="notes"
+                rows="6"
+                value={notes}
+                onChange={(event) =>
+                  setNotes(event.target.value)
+                }
+                placeholder="Add recruiter details, interview notes, follow-up tasks, or other information."
+              />
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => navigate(-1)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="primary-button"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? "Saving..."
+                : "Save Application"}
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
   );
 }
 
