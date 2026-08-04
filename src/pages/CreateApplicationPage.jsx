@@ -24,163 +24,278 @@ function CreateApplicationPage() {
     setIsSubmitting(true);
 
     const application = {
-      company,
-      position,
+      company: company.trim(),
+      position: position.trim(),
       status,
-      location: location || null,
+      location: location.trim() || null,
       dateApplied: dateApplied || null,
-      jobLink: jobLink || null,
-      notes: notes || null,
+      jobLink: jobLink.trim() || null,
+      notes: notes.trim() || null,
     };
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/applications`,
-        {
-          method: "POST",
-
-          // Send the JWT cookie to the protected backend route.
-          credentials: "include",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify(application),
+      const response = await fetch(`${API_URL}/api/applications`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(application),
+      });
 
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         setError(
           data.error ||
-            "Something went wrong. Please try again.",
+            data.message ||
+            "Something went wrong. Please try again."
         );
         return;
       }
 
       navigate(`/applications/${data.id}`);
-    } catch {
-      setError("Could not connect to the backend.");
+    } catch (requestError) {
+      console.error("Create application error:", requestError);
+      setError("Could not connect to the backend. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <section className="form-page">
-      <div className="application-form-card">
-        <h1>New Application</h1>
+    <main className="form-page">
+      <section
+        className="application-form-card"
+        aria-labelledby="new-application-heading"
+      >
+        <div className="form-header">
+          <p className="form-eyebrow">Job Tracker</p>
+
+          <h1 id="new-application-heading">
+            New Application
+          </h1>
+
+          <p className="form-description">
+            Add a new job application and track its progress.
+          </p>
+        </div>
 
         <form
           className="application-form"
           onSubmit={handleSubmit}
+          noValidate
         >
           {error && (
-            <p className="state error">{error}</p>
+            <div
+              id="application-error-message"
+              className="application-error"
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+            >
+              <span
+                className="application-error-icon"
+                aria-hidden="true"
+              >
+                !
+              </span>
+
+              <span>{error}</span>
+            </div>
           )}
 
-          <label>
-            Company
-            <input
-              type="text"
-              value={company}
-              onChange={(event) =>
-                setCompany(event.target.value)
-              }
-              required
-            />
-          </label>
+          <div className="form-grid">
+            <div className="form-group">
+              <label htmlFor="company">
+                Company
+                <span
+                  className="required-mark"
+                  aria-hidden="true"
+                >
+                  *
+                </span>
+              </label>
 
-          <label>
-            Position
-            <input
-              type="text"
-              value={position}
-              onChange={(event) =>
-                setPosition(event.target.value)
-              }
-              required
-            />
-          </label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                value={company}
+                onChange={(event) => {
+                  setCompany(event.target.value);
 
-          <label>
-            Status
-            <select
-              value={status}
-              onChange={(event) =>
-                setStatus(event.target.value)
-              }
+                  if (error) {
+                    setError("");
+                  }
+                }}
+                placeholder="Example: OpenAI"
+                autoComplete="organization"
+                aria-required="true"
+                aria-invalid={Boolean(error)}
+                aria-describedby={
+                  error
+                    ? "application-error-message"
+                    : undefined
+                }
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="position">
+                Position
+                <span
+                  className="required-mark"
+                  aria-hidden="true"
+                >
+                  *
+                </span>
+              </label>
+
+              <input
+                id="position"
+                name="position"
+                type="text"
+                value={position}
+                onChange={(event) => {
+                  setPosition(event.target.value);
+
+                  if (error) {
+                    setError("");
+                  }
+                }}
+                placeholder="Example: Software Engineer"
+                autoComplete="organization-title"
+                aria-required="true"
+                aria-invalid={Boolean(error)}
+                aria-describedby={
+                  error
+                    ? "application-error-message"
+                    : undefined
+                }
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="status">
+                Status
+              </label>
+
+              <select
+                id="status"
+                name="status"
+                value={status}
+                onChange={(event) =>
+                  setStatus(event.target.value)
+                }
+              >
+                <option value="Saved">Saved</option>
+                <option value="Applied">Applied</option>
+                <option value="Interview">
+                  Interview
+                </option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">
+                  Rejected
+                </option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="location">
+                Location
+              </label>
+
+              <input
+                id="location"
+                name="location"
+                type="text"
+                value={location}
+                onChange={(event) =>
+                  setLocation(event.target.value)
+                }
+                placeholder="Example: New York, NY or Remote"
+                autoComplete="address-level2"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dateApplied">
+                Date applied
+              </label>
+
+              <input
+                id="dateApplied"
+                name="dateApplied"
+                type="date"
+                value={dateApplied}
+                onChange={(event) =>
+                  setDateApplied(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="jobLink">
+                Job link
+              </label>
+
+              <input
+                id="jobLink"
+                name="jobLink"
+                type="url"
+                placeholder="https://company.com/jobs/123"
+                value={jobLink}
+                onChange={(event) =>
+                  setJobLink(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="form-group form-group-full">
+              <label htmlFor="notes">
+                Notes
+              </label>
+
+              <textarea
+                id="notes"
+                name="notes"
+                rows="6"
+                value={notes}
+                onChange={(event) =>
+                  setNotes(event.target.value)
+                }
+                placeholder="Add recruiter details, interview notes, follow-up tasks, or other information."
+              />
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => navigate(-1)}
+              disabled={isSubmitting}
             >
-              <option value="Saved">Saved</option>
-              <option value="Applied">Applied</option>
-              <option value="Interview">
-                Interview
-              </option>
-              <option value="Offer">Offer</option>
-              <option value="Rejected">
-                Rejected
-              </option>
-              <option value="Closed">Closed</option>
-            </select>
-          </label>
+              Cancel
+            </button>
 
-          <label>
-            Location
-            <input
-              type="text"
-              value={location}
-              onChange={(event) =>
-                setLocation(event.target.value)
-              }
-            />
-          </label>
-
-          <label>
-            Date applied
-            <input
-              type="date"
-              value={dateApplied}
-              onChange={(event) =>
-                setDateApplied(event.target.value)
-              }
-            />
-          </label>
-
-          <label>
-            Job link
-            <input
-              type="url"
-              placeholder="https://company.com/jobs/123"
-              value={jobLink}
-              onChange={(event) =>
-                setJobLink(event.target.value)
-              }
-            />
-          </label>
-
-          <label>
-            Notes
-            <textarea
-              value={notes}
-              onChange={(event) =>
-                setNotes(event.target.value)
-              }
-            />
-          </label>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting
-              ? "Saving..."
-              : "Save Application"}
-          </button>
+            <button
+              className="primary-button"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? "Saving..."
+                : "Save Application"}
+            </button>
+          </div>
         </form>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }
 
