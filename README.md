@@ -277,27 +277,39 @@ Both servers must be running. Start the backend first.
 
 ### Backend
 
+In the `job-tracker-backend` repository:
+
 ```bash
-cd ~/TTPR/capstone-2/job-tracker-backend
 npm install
+cp .env.example .env
+npm run db:create   # create the PostgreSQL database
+npm run seed        # load 48 sample applications (optional)
 npm run dev
 ```
 
-Run the seed script when sample data is needed:
+That creates a demo account you can sign in with:
 
-```bash
-npm run seed
-```
+| Field | Value |
+|---|---|
+| Email | `dhimy@example.com` |
+| Password | `Password123!` |
+
+Full backend setup, API reference, and troubleshooting live in the backend
+repository's README.
 
 ### Frontend
 
-Open another terminal:
+Open another terminal, in this repository:
 
 ```bash
-cd ~/TTPR/capstone-2/job-tracker-frontend
 npm install
+cp .env.example .env
 npm run dev
 ```
+
+**Auth0 is optional.** Leave the three `VITE_AUTH0_*` variables blank and the app
+runs normally with email + password login — the "Continue with Auth0" button is
+simply not shown. Fill all three in if you want social login.
 
 The planned local URLs are:
 
@@ -387,6 +399,22 @@ Verify manually:
 - Routes still work after refresh
 - Stopping the backend produces a visible frontend error
 - The layout works at mobile and desktop widths
+
+## Performance Note
+
+The dashboard uses Recharts and the interview room uses `socket.io-client`, which
+are the two heaviest libraries in the project. Both routes are loaded with
+`React.lazy()` in `src/App.jsx`, so their code is only downloaded when someone
+visits those pages.
+
+Measured with `npm run build`:
+
+| | Initial JS (gzipped) |
+|---|---|
+| Single bundle | 305 kB |
+| After splitting the two heavy routes | **181 kB** |
+
+Someone who only opens the login page no longer downloads the charting library.
 
 ## Deployment
 

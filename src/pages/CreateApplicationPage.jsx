@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL;
+// Same fallback as api/client.js and api/auth.js. Without it, a missing
+// VITE_API_URL makes this one page request "undefined/api/applications"
+// while the rest of the app keeps working against localhost.
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function CreateApplicationPage() {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -20,6 +20,23 @@ import {
 } from "./api/auth.js";
 
 import "./App.css";
+
+// These two routes pull in the heaviest libraries in the project: Recharts for
+// the dashboard charts and socket.io-client for the interview room. Loading
+// them with lazy() means their code is downloaded only when someone actually
+// visits those pages, instead of being part of the bundle every visitor gets
+// just to see the login screen.
+const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
+const InterviewRoomPage = lazy(() => import("./pages/InterviewRoomPage.jsx"));
+
+// Shown for the moment a lazy page's code is still downloading.
+function PageLoading() {
+  return (
+    <p className="page-loading" role="status">
+      Loading…
+    </p>
+  );
+}
 
 function App() {
   const [user, setUser] = useState(null);
@@ -118,9 +135,13 @@ function App() {
           />
         }
       >
+        {/* key={user?.id} makes React remount Home whenever the signed-in
+            user changes, which resets its state for free. Without it the
+            previous user's applications stay in Home's state and flash on
+            screen before the new user's data loads. */}
         <Route
           path="/"
-          element={<Home user={user} />}
+          element={<Home key={user?.id} user={user} />}
         />
 
         <Route
@@ -131,6 +152,36 @@ function App() {
         <Route
           path="/signup"
           element={<SignupPage setUser={setUser} />}
+        />
+
+        {/* key={user?.id} for the same reason as Home above: remount on a
+            user change so the previous user's statistics never linger. */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute
+              user={user}
+              isLoading={isLoading}
+            >
+              <Suspense fallback={<PageLoading />}>
+                <DashboardPage key={user?.id} />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interview-room"
+          element={
+            <ProtectedRoute
+              user={user}
+              isLoading={isLoading}
+            >
+              <Suspense fallback={<PageLoading />}>
+                <InterviewRoomPage key={user?.id} />
+              </Suspense>
+            </ProtectedRoute>
+          }
         />
 
         <Route

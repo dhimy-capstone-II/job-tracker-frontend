@@ -23,6 +23,9 @@ function EditApplicationPage() {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Blocks a double-click from firing two update requests.
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Store an error from loading the application.
   const [loadError, setLoadError] = useState("");
 
@@ -71,15 +74,22 @@ function EditApplicationPage() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+    setIsSubmitting(true);
 
+    // Empty optional fields must be sent as null, not "".
+    //
+    // The model validates dateApplied with isDate and jobLink with isUrl.
+    // Those validators run on any non-null value, so an empty string fails
+    // them ("Date applied must be a valid date"). null skips validation
+    // because both columns allow null.
     const application = {
-      company,
-      position,
+      company: company.trim(),
+      position: position.trim(),
       status,
-      location,
-      dateApplied,
-      jobLink,
-      notes,
+      location: location.trim() || null,
+      dateApplied: dateApplied || null,
+      jobLink: jobLink.trim() || null,
+      notes: notes.trim() || null,
     };
 
     try {
@@ -89,6 +99,8 @@ function EditApplicationPage() {
       navigate(`/applications/${id}`);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -176,7 +188,9 @@ function EditApplicationPage() {
             />
           </label>
 
-          <button type="submit">Update Application</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Update Application"}
+          </button>
         </form>
       </div>
     </section>

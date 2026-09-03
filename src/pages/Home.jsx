@@ -6,19 +6,26 @@ import { getApplications } from "../api/applications.js";
 
 function Home({ user }) {
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // A logged-out visitor has nothing to fetch, so this component only
+  // starts in a loading state when there is actually a user. App.jsx keys
+  // Home by user id, so this initial value is recomputed on every
+  // login/logout rather than going stale.
+  const [loading, setLoading] = useState(Boolean(user));
   const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
   useEffect(() => {
     if (!user) {
-      setLoading(false);
       return;
     }
 
     async function loadApplications() {
       try {
+        // Covers the case where the user object changes identity without
+        // the id changing, so the effect re-runs without a remount.
+        setLoading(true);
         setLoadError("");
 
         const data = await getApplications();

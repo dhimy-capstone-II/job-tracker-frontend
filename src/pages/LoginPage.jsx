@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
+import { AUTH0_ENABLED } from "../auth0Config.js";
+
 import { login } from "../api/auth.js";
 import FormField from "../components/FormField.jsx";
+import Toast from "../components/Toast.jsx";
 
 // Login validation only checks whether the fields are empty.
 //
@@ -41,6 +44,16 @@ function LoginPage({ setUser }) {
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  // The popup message. null means nothing is showing.
+  // The id changes every time so submitting the same wrong password twice
+  // replays the animation instead of leaving a stale message on screen.
+  const [toast, setToast] = useState(null);
+
+  // useCallback keeps this function identical between renders. Toast starts
+  // its hide timer whenever this changes, so a new function on every
+  // keystroke would keep restarting the countdown.
+  const dismissToast = useCallback(() => setToast(null), []);
 
   // If ProtectedRoute redirected the user to login, it stores the page the
   // user originally requested in location.state.from.
@@ -91,8 +104,12 @@ function LoginPage({ setUser }) {
     } catch (error) {
       // The backend deliberately returns one general invalid-credentials
       // message instead of revealing whether the account exists.
-      setErrors({
-        general: error.message,
+      //
+      // Date.now() gives each failure a different id, so the popup animates
+      // again even when the message text is exactly the same as last time.
+      setToast({
+        id: Date.now(),
+        message: error.message,
       });
     } finally {
       setIsLoading(false);
@@ -101,16 +118,14 @@ function LoginPage({ setUser }) {
 
   return (
     <section className="login-page">
+      {/* The popup floats above the page, so it lives outside the card and
+          does not push the form down when it appears. */}
+      <Toast toast={toast} onDismiss={dismissToast} />
+
       <div className="login-form-card">
         <h1>Log In</h1>
 
         <p>Welcome back. Log in to continue managing your job applications.</p>
-
-        {errors.general && (
-          <p role="alert" className="state error">
-            {errors.general}
-          </p>
-        )}
 
         {/* noValidate disables the browser's default popup messages so this
             page uses the validation messages defined above. */}
@@ -141,22 +156,30 @@ function LoginPage({ setUser }) {
           </button>
         </form>
 
-        {/* Auth0 is the second authentication option.
-            Auth0 collects the external provider credential, so your
-            application never receives that provider password. */}
-        <div className="auth-divider">
-          <span />
-          <p>or</p>
-          <span />
-        </div>
+        {/* Auth0 is the second authentication option. Auth0 collects the
+            external provider credential, so this application never receives
+            that provider password.
 
-        <button
-          type="button"
-          className="auth0-button"
-          onClick={() => loginWithRedirect()}
-        >
-          Continue with Auth0
-        </button>
+            It is optional: when the VITE_AUTH0_* variables are not set this
+            whole block is left out, and the email + password form above is the
+            only way in. That is what a fresh clone of the repo looks like. */}
+        {AUTH0_ENABLED && (
+          <>
+            <div className="auth-divider">
+              <span />
+              <p>or</p>
+              <span />
+            </div>
+
+            <button
+              type="button"
+              className="auth0-button"
+              onClick={() => loginWithRedirect()}
+            >
+              Continue with Auth0
+            </button>
+          </>
+        )}
 
         <p className="auth-switch">
           Don&apos;t have an account? <Link to="/signup">Sign up</Link>

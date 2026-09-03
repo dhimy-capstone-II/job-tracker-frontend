@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
+import { AUTH0_ENABLED } from "../auth0Config.js";
+
 import { signup } from "../api/auth.js";
 import FormField from "../components/FormField.jsx";
 
@@ -187,22 +189,29 @@ function SignupPage({ setUser }) {
           </button>
         </form>
 
-        {/* Auth0 is the second authentication option.
-            Auth0 collects the credential, so your app never receives
-            or stores the social provider password. */}
-        <div className="auth-divider">
-          <span />
-          <p>or</p>
-          <span />
-        </div>
+        {/* Auth0 is the second authentication option. Auth0 collects the
+            credential, so this app never receives or stores the social
+            provider password.
 
-        <button
-          type="button"
-          className="auth0-button"
-          onClick={() => loginWithRedirect()}
-        >
-          Continue with Auth0
-        </button>
+            It is optional: when the VITE_AUTH0_* variables are not set this
+            whole block is left out and the form above is the only way in. */}
+        {AUTH0_ENABLED && (
+          <>
+            <div className="auth-divider">
+              <span />
+              <p>or</p>
+              <span />
+            </div>
+
+            <button
+              type="button"
+              className="auth0-button"
+              onClick={() => loginWithRedirect()}
+            >
+              Continue with Auth0
+            </button>
+          </>
+        )}
 
         <p className="auth-switch">
           Already have an account?{" "}

@@ -511,3 +511,10 @@
   }
 }
 
+
+/* Placeholder shown while a lazily-loaded page is still downloading. */
+.page-loading {
+  padding: 3rem 1.5rem;
+  color: var(--text-soft);
+  text-align: center;
+}

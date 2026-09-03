@@ -1,0 +1,62 @@
+/* ========================================
+   TOAST MESSAGE
+======================================== */
+
+.toast {
+  /* fixed keeps it pinned to the window, so it floats above the page
+     instead of pushing the form down when it appears. */
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  z-index: 1000;
+
+  /* translateX centres it. Motion animates the Y position separately, so
+     the two do not fight each other. */
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(440px, calc(100% - 2rem));
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.22);
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.toast-error {
+  background-color: var(--danger);
+}
+
+.toast-success {
+  background-color: var(--success);
+}
+
+.toast-message {
+  flex: 1;
+}
+
+.toast-close {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toast-close:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.toast-close:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}

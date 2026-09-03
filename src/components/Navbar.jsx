@@ -26,6 +26,18 @@ export default function Navbar({ user, onLogout }) {
           </NavLink>
 
           {user && (
+            <NavLink to="/dashboard" className={linkClass}>
+              Dashboard
+            </NavLink>
+          )}
+
+          {user && (
+            <NavLink to="/interview-room" className={linkClass}>
+              Interview Room
+            </NavLink>
+          )}
+
+          {user && (
             <NavLink
               to="/applications/new"
               className={linkClass}
